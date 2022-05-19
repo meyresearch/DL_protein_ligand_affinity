@@ -21,7 +21,7 @@ Datasets and trained models can be downloaded [here](https://uoe-my.sharepoint.c
 ### Steps for testing and plotting
 
 * Unzip the *data* folder from [here](https://uoe-my.sharepoint.com/personal/s2112695_ed_ac_uk/_layouts/15/onedrive.aspx?login_hint=s2112695%40ed%2Eac%2Euk&id=%2Fpersonal%2Fs2112695%5Fed%5Fac%5Fuk%2FDocuments%2FBindingAffinity%5FDL%5FData) and copy it to the DGraphDTA folder.
-* Run the *KIBA_Results-Main.ipynb* file for testing using bottstrapping method and generating the resulting plots.
+* Run the *KIBA_Results-Main.ipynb* file for testing using bootstrapping method and generating the resulting plots.
 
 ### Update 11th April 2022
 
