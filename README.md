@@ -28,6 +28,3 @@ Datasets and trained models can be downloaded [here](https://uoe-my.sharepoint.c
 - Code for contact map analysis project and results are added to the DGraphDTA folder. Here we are comparing various contact map tecniques in the DGraphDTA pipeline. To run the experiments setup a new environment with the mldd1.txt file in the DGraphDTA folder.
 
 
-### Update 19th May 2022
-
-- Organized the code to test and generate graphics.
