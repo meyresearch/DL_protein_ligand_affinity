@@ -170,7 +170,7 @@ def smile_to_graph(smile,ligand_method):
         return c_size, features, edge_index
 
 
-# PSSM
+# PSSM calculation
 def PSSM_calculation(aln_file, pro_seq):
     pfm_mat = np.zeros((len(pro_res_table), len(pro_seq)))
     with open(aln_file, 'r') as f:
