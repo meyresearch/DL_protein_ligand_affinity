@@ -22,9 +22,9 @@ This is an example for how to set up a working conda environment to run the code
 
 ## Dataset
 
-The files in `data` contain the 
+The files in `data` contain the datasets used in the study and the trained models.
 
-If you want to train or test the models with the data used in the study then: 
+If you want to train or test the models with the `data`  used in the study then: 
 1. download it from [here](https://uoe-my.sharepoint.com/personal/s2112695_ed_ac_uk/_layouts/15/onedrive.aspx?login_hint=s2112695%40ed%2Eac%2Euk&id=%2Fpersonal%2Fs2112695%5Fed%5Fac%5Fuk%2FDocuments%2FBindingAffinity%5FDL%5FData)
 2. unzip the directory and place it into `data` such that you have the path `data/` in the main folder.
 
