@@ -15,7 +15,7 @@ current repo
 
 This is an example for how to set up a working conda environment to run the code (but make sure to use the correct pytorch, pytorch-geometric, cuda versions or cpu only versions):
 
-    conda create --name mldd --file mldd1.txt
+    conda create --name mldd --file mldd.txt
     conda activate mldd
     pip install tensorflow-gpu
 
