@@ -105,7 +105,6 @@ def atom_features(atom):
                     [atom.GetIsAromatic()])
 
 
-# one ont encoding
 def one_of_k_encoding(x, allowable_set):
     if x not in allowable_set:
         raise Exception('input {0} not in allowable set{1}:'.format(x, allowable_set))
@@ -119,82 +118,8 @@ def one_of_k_encoding_unk(x, allowable_set):
     return list(map(lambda s: x == s, allowable_set))
 
 
-# def randSeq(N):
-#     '''Generates random protein sequence of given length'''
-#     aminos=["A","C","D", "E","F","G","H","I","K","L", "M","N","P","Q","R","S", "T","V","W","Y"]
-#     return ''.join(random.choice(aminos) for _ in range(N))
-
-# mol smile to mol graph edge index
-# To replace an instance of the given halogen randomly from the SMILES String
-def random_replace(text, token, replace, num_replacements):
-    num_tokens = text.count(token)
-    points = [0] + sorted(random.sample(range(1,num_tokens+1),num_replacements)) + [num_tokens+1]
-    return replace.join(token.join(text.split(token)[i:j]) for i,j in zip(points,points[1:]))
-# Point Randomisation of Ligands
-def congeneric_smiles(smile):
-    
-    d = {"Br":smile.count("Br"),"Cl":smile.count("Cl"),"F":smile.count("F"),"(=O)":smile.count("(=O)")}
-    total_changes=sum(list(d.values()))
-    print(total_changes)
-  
-  #if no halogen or no double bond oxygen is present then add Chlorine (Cl) next to a random Carbon (C) atom
-    if total_changes==0:
-#         for i in range(0,len(smile)):
-#             upd_smile=random_replace(smile,'C', 'CF', 1)
-#             m = Chem.MolFromSmiles(upd_smile,sanitize=False)
-#             if m is None:
-#                 print('invalid')
-#                 continue
-#             else:
-#                 print(upd_smile)
-       
-        upd_smile=smile+'Cl'
-        m = Chem.MolFromSmiles(upd_smile,sanitize=False)
-        if m is None:
-            print('invalid')
-        return upd_smile  
-    
-
-
-
-      #if no halogen or no double bond oxygen is present then add Chlorine (Cl) next to a random Carbon (C) atom
-    if total_changes>0 and total_changes<=3:
-        num_changes=random.randint(1, total_changes)
-    else:
-        num_changes=random.randint(1, 4)
-    print(num_changes)
-
-    for i in range(1,num_changes+1):
-        del_keys= []
-        for key, value in d.items():
-            if value == 0:
-                del_keys.append(key)
-        for key in del_keys:
-            d.pop(key)
-
-        change, count = random.choice(list(d.items()))
-
-        if change=="Cl":
-            smile=random_replace(smile,'Cl', random.choice(['F','Br']), 1)
-            d["Cl"]=d["Cl"]-1
-            continue
-        if change=="Br":
-            smile=random_replace(smile,'Br', random.choice(['Cl','F']), 1)
-            d["Br"]=d["Br"]-1
-            continue
-        if change=="F":
-            smile=random_replace(smile,'F', random.choice(['Cl','Br']), 1)
-            d["F"]=d["F"]-1
-            continue
-        if change=="(=O)":
-            smile=random_replace(smile,'(=O)', '', 1)
-            d["(=O)"]=d["(=O)"]-1
-            continue
-    
-    return smile
-
       
-def smile_to_graph(smile,ligand_method):
+def smile_to_graph(smile,ligand_method,dataset):
 
     if ligand_method=="original":
         mol = Chem.MolFromSmiles(smile)
@@ -250,7 +175,7 @@ def smile_to_graph(smile,ligand_method):
         # print('smile_to_graph')
         # print(np.array(features).shape)
         return c_size, features, edge_index
-    if ligand_method=="congeneric":
+    if ligand_method=="point_random":
         mol = Chem.MolFromSmiles(smile)
         c_size = mol.GetNumAtoms()
         features = []
@@ -276,9 +201,10 @@ def smile_to_graph(smile,ligand_method):
         # print('smile_to_graph')
         # print(np.array(features).shape)
         return c_size, features, edge_index
-    if ligand_method=="random":
+    if ligand_method=="random_sample":
         #change the path to the ligands file /data/dataset/ligands_can.txt
-        file = open("/rds/user/co-gora1/hpc-work/DGraphDTA/data/davis/ligands_can.txt", "r")
+        path='/rds/user/co-gora1/hpc-work/DGraphDTA/data/'+dataset+'/ligands_can.txt'
+        file = open(path, "r")
         contents = file.read()
         dictionary = ast.literal_eval(contents)
         entry_list = list(dictionary.items())
@@ -363,8 +289,6 @@ def target_to_graph(target_key, target_sequence, contact_dir, aln_dir):
     index_row, index_col = np.where(contact_map >= 0.5)
     for i, j in zip(index_row, index_col):
         target_edge_index.append([i, j])
-    #rand_target_sequence=randSeq(len(target_sequence))
-    #target_feature = target_to_feature(target_key, rand_target_sequence, aln_dir)
     target_feature = target_to_feature(target_key, target_sequence, aln_dir)
     target_edge_index = np.array(target_edge_index)
     return target_size, target_feature, target_edge_index
@@ -375,7 +299,7 @@ def valid_target1(key, dataset,method):
     aln_dir = 'data/' + dataset + '/aln'
     contact_file = os.path.join(contact_dir, key + '.npy')
     aln_file = os.path.join(aln_dir, key + '.aln')
-    # print(contact_file, aln_file)
+   
     if os.path.exists(contact_file) and os.path.exists(aln_file):
         return True
     else:
@@ -393,8 +317,9 @@ def create_dataset_for_test(dataset, method,method1):
     dataset_path = 'data/' + dataset + '/'
     test_fold = json.load(open(dataset_path + 'folds/test_fold_setting2.txt'))
     ##test_fold = json.load(open(dataset_path + 'folds/test_fold_setting1.txt'))
+    
     ligands = json.load(open(dataset_path + 'ligands_can.txt'), object_pairs_hook=OrderedDict)
-    proteins = json.load(open(dataset_path + 'proteins_updated1.txt'), object_pairs_hook=OrderedDict)
+    proteins = json.load(open(dataset_path + 'proteins_updated.txt'), object_pairs_hook=OrderedDict)
     ##proteins = json.load(open(dataset_path + 'proteins.txt'), object_pairs_hook=OrderedDict)
     affinity =  np.load(open(dataset_path + 'Y_updated.npy', 'rb'))
     ##affinity = pickle.load(open(dataset_path + 'Y', 'rb'), encoding='latin1')
@@ -451,7 +376,7 @@ def create_dataset_for_test(dataset, method,method1):
     # create smile graph
     smile_graph = {}
     for smile in compound_iso_smiles:
-        g = smile_to_graph(smile,method1)
+        g = smile_to_graph(smile,method1,dataset)
         smile_graph[smile] = g
     # print(smile_graph['CN1CCN(C(=O)c2cc3cc(Cl)ccc3[nH]2)CC1']) #for test
 
@@ -543,7 +468,7 @@ def create_dataset_for_test_bootstrap(dataset, method,random,method1):
     # create smile graph
     smile_graph = {}
     for smile in compound_iso_smiles:
-        g = smile_to_graph(smile,method1)
+        g = smile_to_graph(smile,method1,dataset)
         smile_graph[smile] = g
     # print(smile_graph['CN1CCN(C(=O)c2cc3cc(Cl)ccc3[nH]2)CC1']) #for test
 
@@ -579,9 +504,9 @@ def create_dataset_for_train(dataset, fold, method,method1):
     train_fold_origin = json.load(open(dataset_path + 'folds/train_fold_setting2.txt'))
 
     train_fold_origin = [e for e in train_fold_origin]  # for 5 folds
-    if method1=='original' or 'random' or "random_node":
-        ligands = json.load(open(dataset_path + 'ligands_can1.txt'), object_pairs_hook=OrderedDict)
-    if method1=="congeneric":
+    if method1=='original' or 'random_sample' or "random_node":
+        ligands = json.load(open(dataset_path + 'ligands_can.txt'), object_pairs_hook=OrderedDict)
+    if method1=="point_random":
         ligands = json.load(open(dataset_path + 'ligands_can1.txt'), object_pairs_hook=OrderedDict)
     
     proteins = json.load(open(dataset_path + 'proteins_updated.txt'), object_pairs_hook=OrderedDict)
@@ -663,7 +588,7 @@ def create_dataset_for_train(dataset, fold, method,method1):
             csv_file = 'data/' + dataset + '_' +method + '_'+ 'fold_' + str(fold) + '_' + opt + '.csv'
             data_to_csv(csv_file, valid_fold_entries)
     print('dataset:', dataset)
-    # print('len(set(drugs)),len(set(prots)):', len(set(drugs)), len(set(prots)))
+   
 
     # entries with protein contact and aln files are marked as effiective
     print('fold:', fold)
@@ -676,7 +601,7 @@ def create_dataset_for_train(dataset, fold, method,method1):
     # create smile graph
     smile_graph = {}
     for smile in compound_iso_smiles:
-        g = smile_to_graph(smile,method1)
+        g = smile_to_graph(smile,method1,dataset)
         smile_graph[smile] = g
 
 
@@ -693,7 +618,6 @@ def create_dataset_for_train(dataset, fold, method,method1):
     if len(smile_graph) == 0 or len(target_graph) == 0:
         raise Exception('no protein or drug, run the script for datasets preparation.')
 
-    # 'data/davis_fold_0_train.csv' or data/kiba_fold_0__train.csv'
    
     train_csv = 'data/' + dataset + '_' +method + '_'+ 'fold_' + str(fold) + '_' + 'train' + '.csv'
     df_train_fold = pd.read_csv(train_csv)
@@ -713,13 +637,3 @@ def create_dataset_for_train(dataset, fold, method,method1):
                                target_key=valid_prots_keys, y=valid_Y, smile_graph=smile_graph,
                                target_graph=target_graph)
     return train_dataset, valid_dataset
-
-
-
-
-
-
-
-
-
-
