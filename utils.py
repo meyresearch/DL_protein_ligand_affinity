@@ -1,7 +1,9 @@
 import os
+import torch
 from torch_geometric.data import InMemoryDataset, DataLoader, Batch
 from torch_geometric import data as DATA
-import torch
+from torch.utils.data import TensorDataset
+
 
 
 # initialize the dataset
