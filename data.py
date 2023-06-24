@@ -203,7 +203,7 @@ def smile_to_graph(smile,ligand_method,dataset):
         return c_size, features, edge_index
     if ligand_method=="random_sample":
         #change the path to the ligands file /data/dataset/ligands_can.txt
-        path='/rds/user/co-gora1/hpc-work/DGraphDTA/data/'+dataset+'/ligands_can.txt'
+        path='/rds/user/co-gora1/hpc-work/data/'+dataset+'/ligands_can.txt'
         file = open(path, "r")
         contents = file.read()
         dictionary = ast.literal_eval(contents)
@@ -503,7 +503,7 @@ def create_dataset_for_train(dataset, fold, method,method1):
     dataset_path = 'data/' + dataset + '/'
     train_fold_origin = json.load(open(dataset_path + 'folds/train_fold_setting2.txt'))
 
-    train_fold_origin = [e for e in train_fold_origin]  # for 5 folds
+    train_fold_origin = [e for e in train_fold_origin] 
     if method1=='original' or 'random_sample' or "random_node":
         ligands = json.load(open(dataset_path + 'ligands_can.txt'), object_pairs_hook=OrderedDict)
     if method1=="point_random":
