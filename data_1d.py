@@ -203,7 +203,7 @@ def smile_to_graph(smile,ligand_method,dataset):
         return c_size, features, edge_index
     if ligand_method=="random_sample":
         #change the path to the ligands file /data/dataset/ligands_can.txt
-        path='/rds/user/co-gora1/hpc-work/data/'+dataset+'/ligands_can.txt'
+        path='/rds/user/co-gora1/hpc-work/DGraphDTA/data/'+dataset+'/ligands_can.txt'
         file = open(path, "r")
         contents = file.read()
         dictionary = ast.literal_eval(contents)
