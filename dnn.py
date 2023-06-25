@@ -5,7 +5,7 @@ from torch_geometric.nn import GCNConv, GATConv, global_max_pool as gmp, global_
 from torch_geometric.utils import dropout_adj
 
 
-# GCN based model
+# GCN based model 
 class GNNNet(torch.nn.Module):
     def __init__(self, n_output=1, num_features_pro=54, num_features_mol=78, output_dim=128, dropout=0.2):
         super(GNNNet, self).__init__()

@@ -316,11 +316,16 @@ def create_dataset_for_test(dataset, method,method1):
     # load dataset
     dataset_path = 'data/' + dataset + '/'
     test_fold = json.load(open(dataset_path + 'folds/test_fold_setting2.txt'))
-    ##test_fold = json.load(open(dataset_path + 'folds/test_fold_setting1.txt'))
+    if method1=='original' or 'random_sample' or "random_node":
+        ligands = json.load(open(dataset_path + 'ligands_can.txt'), object_pairs_hook=OrderedDict)
+    if method1=="point_random":
+        ligands = json.load(open(dataset_path + 'ligands_can1.txt'), object_pairs_hook=OrderedDict)
     
-    ligands = json.load(open(dataset_path + 'ligands_can.txt'), object_pairs_hook=OrderedDict)
     proteins = json.load(open(dataset_path + 'proteins_updated.txt'), object_pairs_hook=OrderedDict)
-    ##proteins = json.load(open(dataset_path + 'proteins.txt'), object_pairs_hook=OrderedDict)
+
+    # load contact and aln
+    msa_path = 'data/' + dataset + '/aln'
+    contac_path = 'data/' + dataset+ "/"+ method+"/"
     affinity =  np.load(open(dataset_path + 'Y_updated.npy', 'rb'))
     ##affinity = pickle.load(open(dataset_path + 'Y', 'rb'), encoding='latin1')
     affinity = np.asarray(affinity)
@@ -409,10 +414,16 @@ def create_dataset_for_test_bootstrap(dataset, method,random,method1):
     # load dataset
     dataset_path = 'data/' + dataset + '/'
     test_fold = json.load(open(dataset_path + 'folds/test_fold_setting2.txt'))
-    ##test_fold = json.load(open(dataset_path + 'folds/test_fold_setting1.txt'))
-    ligands = json.load(open(dataset_path + 'ligands_can.txt'), object_pairs_hook=OrderedDict)
-    proteins = json.load(open(dataset_path + 'proteins_updated1.txt'), object_pairs_hook=OrderedDict)
-    ##proteins = json.load(open(dataset_path + 'proteins.txt'), object_pairs_hook=OrderedDict)
+    if method1=='original' or 'random_sample' or "random_node":
+        ligands = json.load(open(dataset_path + 'ligands_can.txt'), object_pairs_hook=OrderedDict)
+    if method1=="point_random":
+        ligands = json.load(open(dataset_path + 'ligands_can1.txt'), object_pairs_hook=OrderedDict)
+    
+    proteins = json.load(open(dataset_path + 'proteins_updated.txt'), object_pairs_hook=OrderedDict)
+
+    # load contact and aln
+    msa_path = 'data/' + dataset + '/aln'
+    contac_path = 'data/' + dataset+ "/"+ method+"/"
     affinity =  np.load(open(dataset_path + 'Y_updated.npy', 'rb'))
     ##affinity = pickle.load(open(dataset_path + 'Y', 'rb'), encoding='latin1')
     affinity = np.asarray(affinity)
