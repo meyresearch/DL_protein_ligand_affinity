@@ -24,7 +24,7 @@ This is an example for how to set up a working conda environment to run the code
 The files in `data` contain the datasets used in the study and the trained models.
 
 If you want to train or test the models with the `data`  used in the study then: 
-1. download it from [here](https://uoe-my.sharepoint.com/:f:/g/personal/s2112695_ed_ac_uk/Ek7zFQJ5WUhIgEy6D1cvCjgBcVtLpQ0asZvPmjd8uv4afA?e=rekIFD)
+1. download it from [here](https://zenodo.org/records/13833868?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjFjNjFmNWQzLWY0ODctNGNhNC1iNDJmLTI3YjI1N2JiMjc1OSIsImRhdGEiOnt9LCJyYW5kb20iOiIyNWI1ZDkyOGIzYTVlNzczNDc5MDk1MjZmNGIwZmJlZCJ9.MO1NkaIW1mWIcKwowa5lp_M3KSh1dQ3rJVHK5MFTlhaykYaPc-048faG1bUZvqBMtucEC-FGPE5k9oWFcNdpbA)
 2. unzip the directory and place it into `data` such that you have the path `data/` in the main folder.
 
 
