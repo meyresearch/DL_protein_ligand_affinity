@@ -33,5 +33,19 @@ If you want to train or test the models with the `data`  used in the study then:
 * Unzip the `data` folder 
 * Run the `Training_notebook.ipynb` file for training the DL method using various protein and ligand encodings.
 
+## Citation
 
+If you use this repository or the models in your work, please cite the following paper:
 
+```bibtex
+@article{gorantla2023proteins,
+  title={From proteins to ligands: decoding deep learning methods for binding affinity prediction},
+  author={Gorantla, Rohan and Kubincova, Alzbeta and Wei{\ss}e, Andrea Y and Mey, Antonia SJS},
+  journal={Journal of Chemical Information and Modeling},
+  volume={64},
+  number={7},
+  pages={2496--2507},
+  year={2023},
+  publisher={ACS Publications}
+}
+```
